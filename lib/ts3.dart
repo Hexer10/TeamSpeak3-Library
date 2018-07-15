@@ -108,19 +108,6 @@ class TeamSpeak3{
         return completer.future;
     }
 
-    /// Register an event callback
-    /// See HookType
-    /// If Hook both CHANNEL(on the default channel particularly) and SERVER the same event could be sent twice.
-    bool HookEvent(HookType event, Function callback, [int cid = null]){
-           // print(event.toString().substring(event.toString().indexOf('.')+1).toLowerCase());
-        if (event == HookType.CHANNEL && cid == null)
-            throw("HookType CHANNEL requires a ChannelID(cid)");
-
-        this.send('servernotifyregister event=${event.toString().toLowerCase()}');
-        //cb = callback;
-        return true;
-    }
-
     void registerCommand(String command, Function onCommand, CommandType type) {
         if (type == CommandType.SERVER){
             serverCmds[command] = onCommand;
@@ -181,7 +168,6 @@ class TeamSpeak3{
 
         if (reply.startsWith('notifytextmessage')){
             List<String> args = list[0]['msg'].replaceAll(new RegExp(r' +(?= )'), '').split(' ');
-            print(args);
             if (list[0]['targetmode'] == 1){
                 var key = args[0];
                 if (!privateCmds.containsKey(key))
