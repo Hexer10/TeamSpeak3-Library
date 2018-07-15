@@ -8,8 +8,8 @@ void main() async {
 
     ts = await new TeamSpeak3(
         ip: 'localhost', //Ts3 IP
-		username: user, //Query user name
-        password: pass, //Query user password
+		username: 'serveradmin', //Query user name
+        password: 'mysecurepassword', //Query user password
         cid: 2,  //Default channel id
         nickname: 'A fantastic bot' //Bot nickname
     );
