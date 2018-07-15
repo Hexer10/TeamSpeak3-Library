@@ -2,8 +2,6 @@ import 'dart:io';
 import 'dart:async';
 import '../lib/ts3.dart';
 
-Socket socket;
-
 TeamSpeak3 ts;
 
 void main() async {

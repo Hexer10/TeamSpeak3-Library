@@ -1,3 +1,5 @@
+library TeamSpeak3;
+
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
