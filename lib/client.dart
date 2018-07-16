@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 enum ReasonIdentifier {
     REASON_KICK_CHANNEL, // 4: kick client from channel
@@ -46,6 +45,12 @@ class Client {
     }
 
 
+    /// Sends a message to a client.
+    /// The message is already properly escaped.
+    Future<List<Map>> message(String message) async {
+        return ts.send('sendtextmessage targetmode=1 target=$_clid msg=${ts.encode(message)}');
+    }
+
     /// Move a client to a channel given its cid.
     Future<List<Map>> move(int cid) async {
         var reply = await ts.send('clientmove clid=$_clid cid=$cid');
@@ -53,9 +58,8 @@ class Client {
         return reply;
     }
 
-
     /// Kick a client from the server or the current channel.
-    /// Make sure to escape proeprly the reason.
+    /// The reason is already properly escaped.
     Future<List<Map>> kick(String reason, [ReasonIdentifier reasonId = ReasonIdentifier.REASON_KICK_CHANNEL]) async {
         int id;
         if (reasonId == ReasonIdentifier.REASON_KICK_CHANNEL){
@@ -63,15 +67,14 @@ class Client {
         } else {
             id = 5;
         }
-        return await ts.send('clientkick clid=$_clid reasonid=$id');
+        return await ts.send('clientkick clid=$_clid reasonid=$id reasonmsg=${ts.encode(reason)}');
     }
 
 
     /// Update Client's name.
-    /// Make sure to escape proeprly the name.
+    /// The name is already properly escaped.
     Future<List<Map>> setNickname(String name) async {
-        print('New nick: $name');
-        return await ts.send('clientupdate client_nickname=$name');
+        return await ts.send('clientupdate client_nickname=${ts.encode(name)}');
     }
 
     /// Client's ID.
@@ -107,7 +110,7 @@ class Client {
     /// Client's 2 Country code.
     String get country => _country;
 
-    /// Client's IP
+    /// Client's IP.
     String get ip => _ip;
 
     /// Client's connection time.

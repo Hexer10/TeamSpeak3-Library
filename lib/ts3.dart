@@ -1,7 +1,6 @@
 library TeamSpeak3;
 
 import 'dart:collection';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 import 'client.dart';
@@ -49,7 +48,7 @@ class TeamSpeak3{
         _cid = cid;
 
         if (nickname != null) {
-            _nickname = this.encode(nickname);
+            _nickname = nickname;
         }
     }
 
@@ -187,8 +186,8 @@ class TeamSpeak3{
                 if (!serverCmds.containsKey(key))
                     return;
                 serverCmds[key](await new Client(this, list[0]['invokerid']).updateInfo(), args);
-
             }
+            return;
         }
 
         if (!_queue.isEmpty)

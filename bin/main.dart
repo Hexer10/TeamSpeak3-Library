@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:async';
 import '../lib/ts3.dart';
 
 TeamSpeak3 ts;
@@ -30,7 +29,7 @@ void main() async {
 }
 
 void onCommand(var client, var args){
-    print('Client: ${client.clid}');
+    client.message('Thanks for asking help!');
 }
 
 void onData(var data){
