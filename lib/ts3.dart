@@ -107,7 +107,7 @@ class TeamSpeak3{
 
     /// Sends a command to the socket.
     Future<List<Map>> send(String cmd) {
-        _socket.writeln(cmd);
+        _socket.write(cmd + '\n');
         var completer = new Completer<List<Map>>();
         _queue.add(completer);
         return completer.future;

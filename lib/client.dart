@@ -50,7 +50,7 @@ class Client {
     /// Sends a message to a client.
     /// The message is already properly escaped.
     Future<List<Map>> message(String message) async {
-        return ts.send('sendtextmessage targetmode=1 target=$_clid msg=${ts.encode(message)}');
+        return ts.send('sendtextmessage targetmode=1 target=$_clid msg=${ts.encode(message)}' + '\n');
     }
 
     /// Move a client to a channel given its cid.
