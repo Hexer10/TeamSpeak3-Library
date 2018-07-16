@@ -173,19 +173,19 @@ class TeamSpeak3{
                 var key = args[0];
                 if (!privateCmds.containsKey(key))
                     return;
-                privateCmds[key](await new Client(this, list[0]['invokerid']).updateInfo(), args);
+                privateCmds[key](await new Client(this, list[0]['invokerid']), args);
 
             } else if (list[0]['targetmode'] == 2){
                 var key = args[0];
                 if (!channelCmds.containsKey(key))
                     return;
-                channelCmds[key](await new Client(this, list[0]['invokerid']).updateInfo(), args);
+                channelCmds[key](await new Client(this, list[0]['invokerid']), args);
 
             } else if (list[0]['targetmode'] == 3){
                 var key = args[0];
                 if (!serverCmds.containsKey(key))
                     return;
-                serverCmds[key](await new Client(this, list[0]['invokerid']).updateInfo(), args);
+                serverCmds[key](await new Client(this, list[0]['invokerid']), args);
             }
             return;
         }
