@@ -6,8 +6,8 @@ enum ReasonIdentifier {
 }
 
 class Client {
+
     int _clid;
-    //Client Database ID.
     int _cldbid;
     int _cid;
     int _cgid;
@@ -22,11 +22,13 @@ class Client {
     int _connectionTime;
     var ts;
 
+    /// Client class constructor.
     Client(var ts3, int clid) {
         ts = ts3;
         _clid = clid;
     }
 
+    /// Get client info.
     Future<Client> updateInfo() async {
         List<Map> tsInfo = await ts.send('clientinfo clid=$_clid');
         _cid =  tsInfo[0]['cid'];

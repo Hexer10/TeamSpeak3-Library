@@ -5,14 +5,6 @@ import 'dart:io';
 import 'dart:async';
 import 'client.dart';
 
-enum HookType{
-    SERVER,
-    CHANNEL,
-    TEXTSERVER,
-    TEXTCHANNEL,
-    TEXTPRIVATE
-}
-
 enum CommandType{
     SERVER,
     CHANNEL,
@@ -54,6 +46,7 @@ class TeamSpeak3{
 
     /// Establish a socket connection with the server and authenticates.
     Future<List<Map>> connect() async {
+        //Connect to the socket
         await Socket.connect(_ip, _port)
             .then((Socket sock) {
             _socket = sock;
@@ -70,24 +63,35 @@ class TeamSpeak3{
         return await _auth();
     }
 
+    /// Authenticate with the server
     Future<List<Map>> _auth() async {
+
+        //Send user and password.
         List<Map> reply = await this.send('login $_name $_password');
         if (reply[0]['id'] != 0){
             return reply;
         }
+
+        //Keep connection alive (after 10minutes without sending it'll be closed).
         _keepAlive();
 
+        //Use the server
         reply = await this.send('use $_sid');
         if (reply[0]['id'] != 0){
             return reply;
         }
+
+        //Get info about the bot
         reply = await this.send('whoami');
         bot = await new Client(this, reply[0]['client_id']);
 
+        //Move the client to the default channel.
         await bot.move(_cid);
         if (_nickname != null)
             await bot.setNickname(_nickname);
-        await bot.updateInfo();
+
+        bot.updateInfo();
+        //Register for the events
         this.send('servernotifyregister event=textserver');
         this.send('servernotifyregister event=textchannel');
         this.send('servernotifyregister event=textprivate');
@@ -110,6 +114,7 @@ class TeamSpeak3{
     }
 
     void registerCommand(String command, Function onCommand, CommandType type) {
+
         if (type == CommandType.SERVER){
             serverCmds[command] = onCommand;
         } else if (type == CommandType.CHANNEL) {
@@ -117,6 +122,7 @@ class TeamSpeak3{
         } else if (type == CommandType.PRIVATE) {
             privateCmds[command] = onCommand;
         }
+
     }
 
     void _dataHandler(var data) async {
@@ -127,6 +133,7 @@ class TeamSpeak3{
             return;
 
         List<Map> list = new List();
+        //Remove new lines, replace null->nullr (to read properly null after), and split every pipe.
         List<String> values = reply.replaceAll('\n', '').replaceAll('null', 'nullr').split('|');
 
         for (var i = 0; i < values.length; i++) {
@@ -135,17 +142,19 @@ class TeamSpeak3{
             List<String> zones = values[i].split(' ');
 
             for (var x = 0; x < zones.length; x++){
+
+                //Skip 'error' string.
                 if (zones[x] == 'error' || zones[x] == 'notifytextmessage'){
                     continue;
                 }
 
+                //If a key doesnt have a value assign null to it.
                 if (!zones[x].contains('=')){
                     zones[x] = zones[x] + '=null';
                 }
 
                 List<String> params = zones[x].split('=');
                 for (var y = 0; y < params.length; y+=2){
-                    //Convert integer params from String to Int
 
                     String param = '';
                     try {
@@ -154,25 +163,31 @@ class TeamSpeak3{
                         continue;
                     }
 
+                    //Convert integer params from String to Int where possibile
                     try{
                         map[params[y]] = int.parse(param);
                     } catch (e){
                         if (param == 'null')
                             map[params[y]] = null;
                         else
-                         map[params[y]] = decode(param.replaceAll('nullr', 'null')).trim();
+                            //Recode the null value.
+                            map[params[y]] = decode(param.replaceAll('nullr', 'null')).trim();
                     }
                 }
             }
             list.add(map);
         }
 
+        //Handle commands
         if (reply.startsWith('notifytextmessage')){
+            //Replace multiple spaces with one
             List<String> args = list[0]['msg'].replaceAll(new RegExp(r' +(?= )'), '').split(' ');
             if (list[0]['targetmode'] == 1){
                 var key = args[0];
+                //Is the command registered?
                 if (!privateCmds.containsKey(key))
                     return;
+                //Trigger the event.
                 privateCmds[key](await new Client(this, list[0]['invokerid']), args);
 
             } else if (list[0]['targetmode'] == 2){
