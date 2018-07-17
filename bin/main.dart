@@ -1,5 +1,6 @@
 import 'dart:io';
 import '../lib/ts3.dart';
+import '../lib/convert.dart';
 
 TeamSpeak3 ts;
 
@@ -23,6 +24,9 @@ void main() async {
         print(data[0]['msg']);
         exit(1);
     }
+
+    //Init our converter
+    initConvert(ts);
 
     //Listen for commandline inputs
     print('Type /disconnect to stop the bot');
