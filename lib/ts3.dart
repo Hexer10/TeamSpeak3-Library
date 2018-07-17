@@ -206,7 +206,7 @@ class TeamSpeak3{
         }
 
         if (!_queue.isEmpty)
-            _queue.removeFirst().complete(list);
+            _queue.removeLast().complete(list);
 
     }
 

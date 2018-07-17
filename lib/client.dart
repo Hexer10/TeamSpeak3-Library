@@ -25,12 +25,26 @@ class Client {
     /// Client class constructor.
     Client(var ts3, int clid) {
         ts = ts3;
+
+
+        if (clid == null)
+            throw('Invalid CLID!');
+
         _clid = clid;
     }
 
     /// Get client info.
-    Future<Client> updateInfo() async {
+    Future<Client> updateInfo([bool force = true]) async {
         List<Map> tsInfo = await ts.send('clientinfo clid=$_clid');
+
+        // Temporary workaround
+        while (tsInfo[0]['cid'] == null ){
+            tsInfo = await ts.send('clientinfo clid=$_clid');
+
+            if (tsInfo[0]['id'] != 0 && tsInfo[0]['id'] != null)
+                throw('clientinfo failed: $_clid, $tsInfo');
+        }
+
         _cid =  tsInfo[0]['cid'];
         _cldbid = tsInfo[0]['client_database_id'];
         _cgid = tsInfo[0]['client_channel_group_id'];
@@ -56,7 +70,7 @@ class Client {
     /// Move a client to a channel given its cid.
     Future<List<Map>> move(int cid) async {
         var reply = await ts.send('clientmove clid=$_clid cid=$cid');
-        updateInfo();
+        updateInfo(true);
         return reply;
     }
 
