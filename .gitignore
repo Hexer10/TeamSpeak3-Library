@@ -1,24 +1,15 @@
-﻿# Don’t commit the following directories created by pub.
-.buildlog
-.pub/
-build/
-packages
+# Files and directories created by pub
+.dart_tool/
 .packages
-
-# Or the files created by dart2js.
-*.dart.js
-*.js_
-*.js.deps
-*.js.map
-
-# Include when developing application packages.
+# Remove the following pattern if you wish to check in your lock file
 pubspec.lock
 
-#Private files
-bin/test.dart
+# Conventional directory for build outputs
+build/
 
-\.idea/
+# Directory created by dartdoc
+doc/api/
 
-\.dart_tool/pub/bin/
-
-analysis_options\.yaml
+#IDE Files
+.idea/
+*.iml
