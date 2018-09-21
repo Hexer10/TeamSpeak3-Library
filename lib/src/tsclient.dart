@@ -28,7 +28,7 @@ class Client {
 
 
     if (clid == null)
-      throw('Invalid CLID!');
+      throw 'Invalid CLID!';
 
     _clid = clid;
   }
@@ -42,7 +42,7 @@ class Client {
       tsInfo = await ts.send('clientinfo clid=$_clid');
 
       if (tsInfo[0]['id'] != 0 && tsInfo[0]['id'] != null)
-        throw('clientinfo failed: $_clid, $tsInfo');
+        throw 'clientinfo failed: $_clid, $tsInfo';
     }
 
     _cid =  tsInfo[0]['cid'];

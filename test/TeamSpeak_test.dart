@@ -6,7 +6,7 @@ void main() {
     TeamSpeak3 ts3;
 
     setUp(() {
-      ts3 = new TeamSpeak3();
+      ts3 = TeamSpeak3();
     });
 
     test('First Test', () async {

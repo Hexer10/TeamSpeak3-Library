@@ -1,5 +1,3 @@
-library TeamSpeak3;
-
 import 'dart:collection';
 import 'dart:io';
 import 'dart:async';
@@ -15,7 +13,7 @@ class TeamSpeak3{
 
   Socket _socket;
   Client bot;
-  Queue<Completer<List<Map>>> _queue = new Queue();
+  Queue<Completer<List<Map>>> _queue = Queue();
 
   String _ip;
   String _name;
@@ -27,9 +25,9 @@ class TeamSpeak3{
   int _cid;
   int _i = 0;
 
-  Map<String, Function> serverCmds = new Map();
-  Map<String, Function> channelCmds = new Map();
-  Map<String, Function> privateCmds = new Map();
+  Map<String, Function> serverCmds = {};
+  Map<String, Function> channelCmds = {};
+  Map<String, Function> privateCmds = {};
 
   TeamSpeak3({String ip, int port = 10011, String username, String password, int sid = 1, int cid, String nickname}){
     _ip = ip;
@@ -56,7 +54,7 @@ class TeamSpeak3{
           onDone: _doneHandler,
           cancelOnError: false);
     }).catchError((AsyncError e) {
-      print("Connection failed: $e");
+      print('Connection failed: $e');
       exit(1);
     });
     _socket.done;
@@ -83,7 +81,7 @@ class TeamSpeak3{
 
     //Get info about the bot
     reply = await this.send('whoami');
-    bot = await new Client(this, reply[0]['client_id']);
+    bot = Client(this, reply[0]['client_id']);
 
     //Move the client to the default channel.
     await bot.move(_cid);
@@ -102,13 +100,13 @@ class TeamSpeak3{
   //Keep connection alive
   void _keepAlive(){
     const time = const Duration(seconds:590);
-    new Timer.periodic(time, (Timer t) => this.send('whoami'));
+    Timer.periodic(time, (Timer t) => this.send('whoami'));
   }
 
   /// Sends a command to the socket.
   Future<List<Map>> send(String cmd) {
     _socket.write(cmd + '\n');
-    var completer = new Completer<List<Map>>();
+    var completer = Completer<List<Map>>();
     _queue.add(completer);
     return completer.future;
   }
@@ -126,19 +124,19 @@ class TeamSpeak3{
   }
 
   void _dataHandler(var data) async {
-    var reply = new String.fromCharCodes(data).trim();
+    var reply = String.fromCharCodes(data).trim();
     _i++;
 
     if (_i < 2 ) //The first two reply are from the server's messages
       return;
 
-    List<Map> list = new List();
+    List<Map> list = [];
     //Remove new lines, replace null->nullr (to read properly null after), and split every pipe.
     List<String> values = reply.replaceAll('\n', '').replaceAll('null', 'nullr').split('|');
 
     for (var i = 0; i < values.length; i++) {
 
-      Map map = new Map();
+      Map map = {};
       List<String> zones = values[i].split(' ');
 
       for (var x = 0; x < zones.length; x++){
@@ -181,26 +179,26 @@ class TeamSpeak3{
     //Handle commands
     if (reply.startsWith('notifytextmessage')){
       //Replace multiple spaces with one
-      List<String> args = list[0]['msg'].replaceAll(new RegExp(r' +(?= )'), '').split(' ');
+      List<String> args = list[0]['msg'].replaceAll(RegExp(r' +(?= )'), '').split(' ');
       if (list[0]['targetmode'] == 1){
         var key = args[0];
         //Is the command registered?
         if (!privateCmds.containsKey(key))
           return;
         //Trigger the event.
-        privateCmds[key](await new Client(this, list[0]['invokerid']), args);
+        privateCmds[key](Client(this, list[0]['invokerid']), args);
 
       } else if (list[0]['targetmode'] == 2){
         var key = args[0];
         if (!channelCmds.containsKey(key))
           return;
-        channelCmds[key](await new Client(this, list[0]['invokerid']), args);
+        channelCmds[key](Client(this, list[0]['invokerid']), args);
 
       } else if (list[0]['targetmode'] == 3){
         var key = args[0];
         if (!serverCmds.containsKey(key))
           return;
-        serverCmds[key](await new Client(this, list[0]['invokerid']), args);
+        serverCmds[key](Client(this, list[0]['invokerid']), args);
       }
       return;
     }
@@ -215,7 +213,7 @@ class TeamSpeak3{
   }
 
   void _doneHandler(){
-    print("Connection termiated!");
+    print('Connection termiated!');
     _socket.destroy();
   }
 
