@@ -6,7 +6,6 @@ enum ReasonIdentifier {
 }
 
 class Client {
-
   int _clid;
   int _cldbid;
   int _cid;
@@ -26,9 +25,7 @@ class Client {
   Client(var ts3, int clid) {
     ts = ts3;
 
-
-    if (clid == null)
-      throw 'Invalid CLID!';
+    if (clid == null) throw 'Invalid CLID!';
 
     _clid = clid;
   }
@@ -38,20 +35,22 @@ class Client {
     List<Map> tsInfo = await ts.send('clientinfo clid=$_clid');
 
     // Temporary workaround
-    while (tsInfo[0]['cid'] == null ){
+    while (tsInfo[0]['cid'] == null) {
       tsInfo = await ts.send('clientinfo clid=$_clid');
 
       if (tsInfo[0]['id'] != 0 && tsInfo[0]['id'] != null)
         throw 'clientinfo failed: $_clid, $tsInfo';
     }
 
-    _cid =  tsInfo[0]['cid'];
+    _cid = tsInfo[0]['cid'];
     _cldbid = tsInfo[0]['client_database_id'];
     _cgid = tsInfo[0]['client_channel_group_id'];
     _uniqueid = ts.decode(tsInfo[0]['client_unique_identifier']);
     _nickname = tsInfo[0]['client_nickname'];
-    _talk = tsInfo[0]['client_output_muted'] == 0 && tsInfo[0]['client_output_hardware'] == 1;
-    _listen = tsInfo[0]['client_input_muted'] == 0 && tsInfo[0]['client_input_hardware'] == 1;
+    _talk = tsInfo[0]['client_output_muted'] == 0 &&
+        tsInfo[0]['client_output_hardware'] == 1;
+    _listen = tsInfo[0]['client_input_muted'] == 0 &&
+        tsInfo[0]['client_input_hardware'] == 1;
     _away = tsInfo[0]['client_away'] == 1;
     _awayMessage = ts.decode(tsInfo[0]['client_away_message']);
     _country = tsInfo[0]['client_country'];
@@ -60,11 +59,12 @@ class Client {
     return this;
   }
 
-
   /// Sends a message to a client.
   /// The message is already properly escaped.
   Future<List<Map>> message(String message) async {
-    return ts.send('sendtextmessage targetmode=1 target=$_clid msg=${ts.encode(message)}' + '\n');
+    return ts.send(
+        'sendtextmessage targetmode=1 target=$_clid msg=${ts.encode(message)}' +
+            '\n');
   }
 
   /// Move a client to a channel given its cid.
@@ -76,16 +76,18 @@ class Client {
 
   /// Kick a client from the server or the current channel.
   /// The reason is already properly escaped.
-  Future<List<Map>> kick(String reason, [ReasonIdentifier reasonId = ReasonIdentifier.REASON_KICK_CHANNEL]) async {
+  Future<List<Map>> kick(String reason,
+      [ReasonIdentifier reasonId =
+          ReasonIdentifier.REASON_KICK_CHANNEL]) async {
     int id;
-    if (reasonId == ReasonIdentifier.REASON_KICK_CHANNEL){
+    if (reasonId == ReasonIdentifier.REASON_KICK_CHANNEL) {
       id = 4;
     } else {
       id = 5;
     }
-    return await ts.send('clientkick clid=$_clid reasonid=$id reasonmsg=${ts.encode(reason)}');
+    return await ts.send(
+        'clientkick clid=$_clid reasonid=$id reasonmsg=${ts.encode(reason)}');
   }
-
 
   /// Update Client's name.
   /// The name is already properly escaped.
@@ -97,7 +99,7 @@ class Client {
   int get clid => _clid;
 
   /// Client's Database ID.
-  int get cldbid    => _cldbid;
+  int get cldbid => _cldbid;
 
   /// Channel(where the client is ) ID.
   int get cid => _cid;
