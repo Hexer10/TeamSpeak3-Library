@@ -7,7 +7,7 @@ A library to connect to TeamSpeak3 using Query Protocol.
 
 A simple usage example:
 ```dart
-  var ts3 = new TeamSpeak3(username: 'root', password: 'mysecurepassword');
+  var ts3 = TeamSpeak3(InternetAddress.loopbackIPv4, 10011, 'serveradmin', 'mypass');
   await ts3.connect();
 ```
 

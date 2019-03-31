@@ -1,5 +1,4 @@
 /// Support for connecting to TeamSpeak3 servers.
-library teamspeak;
+library teamspeak3;
 
-export 'src/client.dart';
-export 'src/tsclient.dart';
+export 'src/socket.dart';
