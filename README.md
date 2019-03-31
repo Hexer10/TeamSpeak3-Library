@@ -16,3 +16,12 @@ A simple usage example:
 Please file feature requests and bugs at the [issue tracker][tracker].
 
 [tracker]: https://github.com/Hexer10/TeamSpeak3-Library/issues
+
+## References
+The latest version of the official documentation can be gathered by downloading and running a TeamSpeak3 server,
+they will be located inside the `doc/serverquery` directory.
+
+Thanks to yat.qa the un-official [documentation][yat.qa].
+
+
+[yat.qa]: http://yat.qa/resources

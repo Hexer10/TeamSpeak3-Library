@@ -114,7 +114,7 @@ linter:
     - prefer_final_fields
     - prefer_typing_uninitialized_variables
     - one_member_abstracts
-    # - public_member_api_docs
+    - public_member_api_docs
     - prefer_constructors_over_static_methods
     - omit_local_variable_types
     - prefer_generic_function_type_aliases

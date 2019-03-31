@@ -4,10 +4,14 @@ import 'dart:collection';
 
 import 'ts_error.dart';
 
+///Offers a better parsing over the TeamSpeak server response.
 class Reply<T extends Map> extends ListBase<T> {
   final List<T> _data;
+
+  /// [TSError] instance.
   TSError error;
 
+  ///The error map and the ts3 server response are required.
   Reply(Map<String, dynamic> error, this._data) {
     this.error = TSError(error);
   }
@@ -58,4 +62,3 @@ class Reply<T extends Map> extends ListBase<T> {
   @override
   String toString() => 'Error: $error\nData: $_data';
 }
-

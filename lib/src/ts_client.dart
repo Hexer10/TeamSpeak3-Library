@@ -6,6 +6,7 @@ import 'exceptions.dart';
 import 'reply.dart';
 import 'socket.dart';
 
+/// (TeamSpeak3) Client wrapper.
 class Client {
   int _clid;
   int _cldbid;
@@ -20,17 +21,22 @@ class Client {
   String _country;
   String _ip;
   int _connectionTime;
-  TeamSpeak3 ts;
+  TeamSpeak3 _ts;
 
+  /// Constant for channel kick.
+  /// See [Client.kick]
   static const kickChannel = 4;
+
+  /// Constant for server kick.
+  /// See [Client.kick]
   static const kickServer = 5;
 
-  /// Client class constructor.
-  Client(this.ts, this._clid);
+  /// Requires the [TeamSpeak3] instance and a valid client id.
+  Client(this._ts, this._clid);
 
-  /// Get client info.
+  /// Updates the client info with parsing 'clientinfo'.
   Future<void> updateInfo() async {
-    var reply = await ts.write('clientinfo', {'clid': _clid});
+    var reply = await _ts.write('clientinfo', {'clid': _clid});
 
     if (reply.error.id != 0) {
       throw CommandException('clientinfo', error: reply.error);
@@ -56,24 +62,26 @@ class Client {
 
   /// Sends a message to a client.
   /// The message is already properly escaped.
-  Future<Reply> message(String message) => ts.write(
+  Future<Reply> message(String message) => _ts.write(
       'sendtextmessage', {'targetmode': 1, 'target': clid, 'msg': message});
 
+  /// Pokes a client.
+  /// The message is already properly escaped.
   Future<Reply> poke(String message) =>
-      ts.write('clientpoke', {'clid': clid, 'msg': message});
+      _ts.write('clientpoke', {'clid': clid, 'msg': message});
 
-  /// Move a client to a channel given its cid.
+  /// Move a client to a channel given its id.
+  /// and updates his data.
   Future<Reply> move(int cid) async {
-    var reply = await ts.write('clientmove', {'clid': clid, 'cid': cid});
+    var reply = await _ts.write('clientmove', {'clid': clid, 'cid': cid});
     await updateInfo();
     return reply;
   }
 
   /// Kick a client from the server or the current channel.
   /// The reason is already properly escaped.
-  Future<Reply> kick(
-          {String reason = '', int reasonId = kickChannel}) =>
-      ts.write('clientkick',
+  Future<Reply> kick({String reason = '', int reasonId = kickChannel}) =>
+      _ts.write('clientkick',
           {'clid': clid, 'reasonid': reasonId, 'reasonmsg': reason});
 
   /// Client's ID.

@@ -1,4 +1,4 @@
-library teamspeak3.socket  ;
+library teamspeak3.socket;
 
 import 'dart:async';
 import 'dart:collection';
@@ -11,12 +11,24 @@ import 'exceptions.dart';
 import 'reply.dart';
 import 'ts_client.dart';
 
+/// Wrapper for the TCP Socket to the TeamSpeak3 remove server.
 class TeamSpeak3 {
+  /// The remote server host.
   final InternetAddress host;
+
+  /// The remote server port.
   final int port;
+
+  /// The remote server username.
   final String username;
+
+  /// The remote server password.
   final String password;
+
+  /// The remove server id.
   final int server;
+
+  /// Bot(client) instance.
   Bot bot;
 
   Socket _socket;
@@ -33,16 +45,27 @@ class TeamSpeak3 {
   StreamController<Reply> _onServerEvent;
   StreamController<Reply> _onChannelEvent;
 
+  /// Every time a server message is sent a [Command] will be added
+  /// to this server.
   Stream<Command> get onServerCommand => _onServerCommand.stream;
 
+  /// Every time a channel message is sent a [Command] will be added
+  /// to this server.
   Stream<Command> get onChannelCommand => _onChannelCommand.stream;
 
+  /// When the bot receives a message it will be added to this stream.
   Stream<Command> get onPrivateCommand => _onPrivateCommand.stream;
 
+  /// Called every time a server event happens.
+  /// The first key will always be null, and the key will be the event name.
   Stream<Reply> get onServerEvent => _onServerEvent.stream;
 
+  /// Called every time a channel event happens.
+  /// The first key will always be null, and the key will be the event name.
   Stream<Reply> get onChannelEvent => _onChannelEvent.stream;
 
+  /// [connect()] should be called after construction this class.
+  /// You can specify a [server] that will be used in the authentication phase.
   TeamSpeak3(this.host, this.port, this.username, this.password,
       {this.server = 1}) {
     bot = Bot(this);
@@ -68,6 +91,8 @@ class TeamSpeak3 {
             write('servernotifyregister', {'event': 'channel', 'id': 0}));
   }
 
+  /// Connects to the remote server, authenticates to it, and selects the chosen
+  /// server, if any of this process fail a [CommandException] will be thrown.
   Future<void> connect() async {
     _socket = await Socket.connect(host, port);
     _socket.listen(_onData);
@@ -93,6 +118,11 @@ class TeamSpeak3 {
     }
   }
 
+  /// Writes a command to the remote server.
+  /// If the value is [Map] all the parameters will be encoded with the
+  /// according keys, if it's an [Iterable] the command will have no keys,
+  /// If another type is given [toString] will be called and the value will
+  /// be appended to the command.
   Future<Reply> write(String command, [values]) {
     var data = StringBuffer(command.trim());
 
@@ -118,6 +148,8 @@ class TeamSpeak3 {
     return completer.future;
   }
 
+  /// Notifies a specific channel.
+  /// It's highly recommended to use instead [onChannelEvent]
   Stream<Reply> subToChannel(int cid) {
     if (_channelSubsMap.containsKey(cid)) {
       return _channelSubsMap[cid].stream;
@@ -131,6 +163,7 @@ class TeamSpeak3 {
     return controller.stream;
   }
 
+  /// Returns a [Client] instance given his cid.
   Future<Client> getClient(int cid) async {
     var client = Client(this, cid);
     await client.updateInfo();
@@ -265,6 +298,8 @@ class TeamSpeak3 {
     }
   }
 
+  /// Encodes a string according to the TeamSpeak3 documentation.
+  /// [toString] will be called to get the string.
   String encode(string) => string
       .toString()
       .replaceAll(r'\', r'\\')
@@ -279,6 +314,8 @@ class TeamSpeak3 {
       .replaceAll('\t', r'\t')
       .replaceAll('\v', r'\v');
 
+  /// Decodes a string according to the TeamSpeak3 documentation.
+  /// If the string is null, null will be returned.
   String decode(String string) {
     if (string == 'null') {
       return null;
@@ -296,18 +333,4 @@ class TeamSpeak3 {
         .replaceAll(r'\t', '\t')
         .replaceAll(r'\v', '\v');
   }
-}
-
-class Reason {
-  static const join = 0;
-  static const moved = 2;
-  static const timedOut = 3;
-  static const channelKick = 4;
-  static const serverKick = 5;
-  static const ban = 6;
-  static const disconnect = 8;
-  static const edited = 10;
-  static const shutdown = 11;
-
-  Reason._();
 }
