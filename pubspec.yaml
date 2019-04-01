@@ -1,6 +1,6 @@
 name: teamspeak3
-description: Support for TeamSpeak3 Query Protocol
-version: 2.0.2
+description: Support for TeamSpeak3 Query Protocol with constants to parse any parameter.
+version: 2.0.3
 homepage: https://github.com/Hexer10/TeamSpeak3-Library
 author: Mattia <hexer504@gmail.com>
 
