@@ -88,23 +88,17 @@ linter:
     - empty_catches
     - directives_ordering
     - constant_identifier_names
-    #- cascade_invocations
+    - cascade_invocations
     - camel_case_types
     - avoid_unused_constructor_parameters
     - avoid_types_on_closure_parameters
     - avoid_single_cascade_in_expression_statements
     - avoid_setters_without_getters
 
-    #JavaScript
-    - avoid_double_and_int_checks
-    - avoid_js_rounded_ints
-
-
     #Idk
     - comment_references
     - control_flow_in_finally
     - sort_pub_dependencies
-    - library_prefix
     - non_constant_identifier_names
     - curly_braces_in_flow_control_structures
     - implementation_imports
