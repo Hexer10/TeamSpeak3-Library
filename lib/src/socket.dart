@@ -32,6 +32,7 @@ class TeamSpeak3 {
   Bot bot;
 
   Socket _socket;
+  Timer _timer;
 
   int _count = 0;
 
@@ -94,11 +95,12 @@ class TeamSpeak3 {
   /// Connects to the remote server, authenticates to it, and selects the chosen
   /// server, if any of this process fail a [CommandException] will be thrown.
   Future<void> connect() async {
-    _socket = await Socket.connect(host, port);
-    _socket.listen(_onData);
+    _socket = await Socket.connect(host, port)
+      ..listen(_onData);
 
     // Needed to keep alive the connection.
-    Timer.periodic(Duration(minutes: 4, seconds: 50), (_) {
+    // TODO(Hexah): Take in account the commands manually written.
+    _timer = Timer.periodic(Duration(minutes: 4, seconds: 50), (_) {
       write('whoami');
     });
 
@@ -332,5 +334,11 @@ class TeamSpeak3 {
         .replaceAll(r'\r', '\r')
         .replaceAll(r'\t', '\t')
         .replaceAll(r'\v', '\v');
+  }
+
+  /// Terminate the connection to the TeamSpeak3 Server.
+  void dispose() {
+    _socket?.destroy();
+    _timer?.cancel();
   }
 }
