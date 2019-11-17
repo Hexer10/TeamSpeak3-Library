@@ -8,7 +8,10 @@ import 'socket.dart';
 
 /// (TeamSpeak3) Client wrapper.
 class Client {
-  int _clid;
+  /// Client's ID.
+  final int clid;
+  final TeamSpeak3 _ts;
+
   int _cldbid;
   int _cid;
   int _cgid;
@@ -21,7 +24,6 @@ class Client {
   String _country;
   String _ip;
   int _connectionTime;
-  TeamSpeak3 _ts;
 
   /// Constant for channel kick.
   /// See [Client.kick]
@@ -32,11 +34,11 @@ class Client {
   static const kickServer = 5;
 
   /// Requires the [TeamSpeak3] instance and a valid client id.
-  Client(this._ts, this._clid);
+  Client(this._ts, this.clid);
 
   /// Updates the client info with parsing 'clientinfo'.
   Future<void> updateInfo() async {
-    var reply = await _ts.write('clientinfo', {'clid': _clid});
+    var reply = await _ts.write('clientinfo', {'clid': clid});
 
     if (reply.error.id != 0) {
       throw CommandException('clientinfo', error: reply.error);
@@ -83,9 +85,6 @@ class Client {
   Future<Reply> kick({String reason = '', int reasonId = kickChannel}) =>
       _ts.write('clientkick',
           {'clid': clid, 'reasonid': reasonId, 'reasonmsg': reason});
-
-  /// Client's ID.
-  int get clid => _clid;
 
   /// Client's Database ID.
   int get cldbid => _cldbid;
