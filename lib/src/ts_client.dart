@@ -2,6 +2,8 @@ library teamspeak3.client;
 
 import 'dart:async';
 
+import '../definitions.dart';
+
 import 'exceptions.dart';
 import 'reply.dart';
 import 'socket.dart';
@@ -24,14 +26,6 @@ class Client {
   String _country;
   String _ip;
   int _connectionTime;
-
-  /// Constant for channel kick.
-  /// See [Client.kick]
-  static const kickChannel = 4;
-
-  /// Constant for server kick.
-  /// See [Client.kick]
-  static const kickServer = 5;
 
   /// Requires the [TeamSpeak3] instance and a valid client id.
   Client(this._ts, this.clid);
@@ -82,7 +76,9 @@ class Client {
 
   /// Kick a client from the server or the current channel.
   /// The reason is already properly escaped.
-  Future<Reply> kick({String reason = '', int reasonId = kickChannel}) =>
+  Future<Reply> kick(
+          {String reason = '',
+          ReasonIdentifier reasonId = ReasonIdentifier.kickChannel}) =>
       _ts.write('clientkick',
           {'clid': clid, 'reasonid': reasonId, 'reasonmsg': reason});
 
