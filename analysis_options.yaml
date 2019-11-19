@@ -1,3 +1,5 @@
+include: package:effective_dart/analysis_options.yaml
+
 linter:
   rules:
     #Unecessary
@@ -19,7 +21,6 @@ linter:
     - avoid_init_to_null
     - avoid_void_async
     - avoid_types_as_parameter_names
-    - avoid_annotating_with_dynamic
     - prefer_void_to_null
     - prefer_conditional_assignment
     - prefer_is_empty
@@ -34,6 +35,7 @@ linter:
     - invariant_booleans
 
     - await_only_futures
+    - unawaited_futures
     - library_names
     - package_names
     - iterable_contains_unrelated_type

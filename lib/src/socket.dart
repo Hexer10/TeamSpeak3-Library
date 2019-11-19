@@ -125,7 +125,7 @@ class TeamSpeak3 {
   /// according keys, if it's an [Iterable] the command will have no keys,
   /// If another type is given [toString] will be called and the value will
   /// be appended to the command.
-  Future<Reply> write(String command, [values]) {
+  Future<Reply> write(String command, [dynamic values]) {
     var data = StringBuffer(command.trim());
 
     if (values is Map) {
@@ -157,6 +157,8 @@ class TeamSpeak3 {
       return _channelSubsMap[cid].stream;
     }
 
+    // Handled in the close method.
+    // ignore: close_sinks
     var controller = StreamController<Reply>.broadcast(
         onListen: () =>
             write('servernotifyregister', {'event': 'channel', 'id': '$cid'}));
@@ -249,8 +251,8 @@ class TeamSpeak3 {
       if (_onChannelEvent.hasListener) {
         _onChannelEvent.add(reply);
       }
-      var controller = _channelSubsMap[int.parse(reply[0]['cid'])];
-      controller?.add(reply);
+
+      _channelSubsMap[int.parse(reply[0]['cid'])]?.add(reply);
       return;
     } else if (decoded.startsWith('notifychannelcreated')) {
       _onChannelEvent.add(reply);
@@ -302,7 +304,7 @@ class TeamSpeak3 {
 
   /// Encodes a string according to the TeamSpeak3 documentation.
   /// [toString] will be called to get the string.
-  String encode(string) => string
+  String encode(Object string) => string
       .toString()
       .replaceAll(r'\', r'\\')
       .replaceAll('/', r'\/')
@@ -337,8 +339,10 @@ class TeamSpeak3 {
   }
 
   /// Terminate the connection to the TeamSpeak3 Server.
+  /// And closes all the channel's streams.
   void dispose() {
     _socket?.destroy();
     _timer?.cancel();
+    _channelSubsMap.forEach((_, v) => v.close());
   }
 }
