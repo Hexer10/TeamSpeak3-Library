@@ -9,6 +9,7 @@ import 'bot.dart';
 import 'command.dart';
 import 'exceptions.dart';
 import 'reply.dart';
+import 'ts_channel.dart';
 import 'ts_client.dart';
 
 /// Wrapper for the TCP Socket to the TeamSpeak3 remove server.
@@ -143,6 +144,7 @@ class TeamSpeak3 {
       data.write(' ${encode(values)}');
     }
 
+    print('Writing $data');
     var completer = Completer<Reply<Map<String, String>>>();
     _queue.add('$data\n');
     _replyQueue.add(completer);
@@ -172,6 +174,13 @@ class TeamSpeak3 {
     var client = Client(this, cid);
     await client.updateInfo();
     return client;
+  }
+
+  /// Returns a [Channel] instance given its cid.
+  Future<Channel> getChannel(int cid) async {
+    var channel = Channel(this, cid);
+    await channel.updateInfo();
+    return channel;
   }
 
   void _onData(info) {

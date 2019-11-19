@@ -11,3 +11,7 @@
 - Fix send text message
 - Fix [onServerEvent]
 - Use effective dart style
+
+## 2.1.2
+- Add definitions
+- Add channel wrapper

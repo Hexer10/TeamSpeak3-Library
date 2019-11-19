@@ -1,10 +1,10 @@
 name: teamspeak3
 description: Support for TeamSpeak3 Query Protocol with constants to parse any parameter.
-version: 2.1.1
+version: 2.1.2
 homepage: https://github.com/Hexer10/TeamSpeak3-Library
 
 environment:
-  sdk: '>=2.0.0 <3.0.0'
+  sdk: '>=2.2.2 <3.0.0'
 
 
 dev_dependencies:
