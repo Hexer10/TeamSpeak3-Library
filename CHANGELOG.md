@@ -6,3 +6,8 @@
 
 - Minor refactoring
 - Add `dispose` method
+
+## 2.1.1
+- Fix send text message
+- Fix [onServerEvent]
+- Use effective dart style
