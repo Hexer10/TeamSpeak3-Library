@@ -71,7 +71,7 @@ class TeamSpeak3 {
       {this.server = 1}) {
     bot = Bot(this);
 
-    _onPrivateCommand = StreamController<Command>.broadcast(
+    _onServerCommand = StreamController<Command>.broadcast(
         onListen: () => write('servernotifyregister', {'event': 'textserver'}));
 
     _onChannelCommand = StreamController<Command>.broadcast(
