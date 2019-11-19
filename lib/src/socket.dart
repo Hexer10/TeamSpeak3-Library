@@ -298,7 +298,7 @@ class TeamSpeak3 {
     if (_queue.isNotEmpty) {
       var data = _queue.removeFirst();
       _socket.write(data);
-      print('Written $data');
+//      print('Written $data');
     }
   }
 
