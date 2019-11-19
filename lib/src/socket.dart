@@ -219,8 +219,9 @@ class TeamSpeak3 {
 
     var reply = Reply(error, data);
 
-    // Command
-    if (decoded.startsWith('notifytextmessage')) {
+    // Command and check if isn't a manually sent message
+    if (decoded.startsWith('notifytextmessage') &&
+        !decoded.endsWith('error id=0 msg=ok')) {
       var cmd = Command(reply);
       switch (cmd.targetmode) {
         case Command.server:

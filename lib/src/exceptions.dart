@@ -19,7 +19,7 @@ class CommandException implements Exception {
 
   @override
   String toString() {
-    var buffer = StringBuffer('$command failed!');
+    var buffer = StringBuffer('Command $command failed! ');
     if (message != null) {
       buffer.writeln(message);
     }
