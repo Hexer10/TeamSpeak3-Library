@@ -6,5 +6,6 @@ Future<void> main() async {
   var ts =
       TeamSpeak3(InternetAddress.loopbackIPv4, 10011, 'serveradmin', 'mypass');
 
+  await ts.connect();
   await ts.bot.setNickname('DartBot');
 }
