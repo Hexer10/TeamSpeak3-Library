@@ -15,3 +15,8 @@
 ## 2.1.2
 - Add definitions
 - Add channel wrapper
+
+## 2.2.0
+- Add ChannelProperties
+- Channel.create uses ChannelProperties.
+- Add Channel.edit
