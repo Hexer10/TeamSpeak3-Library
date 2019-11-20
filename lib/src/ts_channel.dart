@@ -32,6 +32,15 @@ class Channel {
     return channel;
   }
 
+  /// Edit the channel.
+  Future<void> edit(ChannelProprieties proprieties,
+      {bool updateProprieties = true}) async {
+    await _ts.write('channeledit', {'cid': cid, ...proprieties.toMap()});
+    if (updateProprieties) {
+      await updateInfo();
+    }
+  }
+
   /// Updates the client info with parsing 'channelinfo'.
   Future<void> updateInfo() async {
     var reply = await _ts.write('channelinfo', {'cid': cid});

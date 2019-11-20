@@ -67,10 +67,11 @@ class Client {
       _ts.write('clientpoke', {'clid': clid, 'msg': message});
 
   /// Move a client to a channel given its id.
-  /// and updates his data.
-  Future<Reply> move(int cid) async {
+  Future<Reply> move(int cid, {bool updateProprieties = true}) async {
     var reply = await _ts.write('clientmove', {'clid': clid, 'cid': cid});
-    await updateInfo();
+    if (updateProprieties) {
+      await updateInfo();
+    }
     return reply;
   }
 
