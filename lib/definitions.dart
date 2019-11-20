@@ -46,21 +46,22 @@ class HostBannerMode {
 /// Codecs.
 class Codec {
   /// Speex narrowband (mono, 16bit, 8kHz)
-  static const speexNarrowband = Codec._(0);
+  static const speexNarrowband = Codec(0);
 
   /// Speex wideband (mono, 16bit, 16kHz)
-  static const speexWideband = Codec._(1);
+  static const speexWideband = Codec(1);
 
   /// Speex ultra-wideband (mono, 16bit, 32kHz)
-  static const speexUltrawideband = Codec._(2);
+  static const speexUltrawideband = Codec(2);
 
   /// Celt mono (mono, 16bit, 48kHz)
-  static const mono = Codec._(3);
+  static const mono = Codec(3);
 
   /// Codec id.
   final int id;
 
-  const Codec._(this.id);
+  /// Codec
+  const Codec(this.id);
 
   @override
   String toString() => '$id';
@@ -207,4 +208,103 @@ class TokenType {
 
   @override
   String toString() => '$id';
+}
+
+/// Channel proprieties.
+class ChannelProprieties {
+  /// Channel's name.
+  String channelName;
+
+  /// Channel's topic
+  String channelTopic;
+
+  /// Channel's description
+  String channelDescription;
+
+  /// Channel's (encrypted) password.
+  String channelPassword;
+
+  /// True if the channel has a password. (NOT Changeable)
+  bool channelHasPassword;
+
+  /// Channel's codec. [Codec]
+  Codec channelCodec;
+
+  /// Channel's codec quality.
+  int channelCodecQuality;
+
+  /// Channel's max clients.
+  int channelMaxClients;
+
+  /// Channel's max family clients.
+  int channelMaxFamilyClients;
+
+  /// Channel's order.
+  int channelOrder;
+
+  /// True if the channel is permanent.
+  bool channelPermanent;
+
+  /// True if the channel is semipermanent.
+  bool channelSemipermanent;
+
+  /// True if the channel is temporary.
+  bool channelTemporary;
+
+  /// True if the channel the default one.
+  bool channelDefault;
+
+  /// True if the channel's max clients are unlimited.
+  bool channelMaxClientsUnlimited;
+
+  /// True if the channel's max family clients are unlimited.
+  bool channelMaxFamilyClientsUnlimited;
+
+  /// True if the channel's max family clients are inherited.
+  bool channelMaxFamilyClientsInherited;
+
+  /// Channel needed talk power.
+  int channelNeededTalkPower;
+
+  /// Channel's phonetic name.
+  String channelPhoneticName;
+
+  /// Channel's filepath. (NOT Changeable)
+  String channelFilepath;
+
+  /// True if the channel silence is forced. (NOT Changeable)
+  bool channelForceSilent;
+
+  /// Channel's icon id.
+  int channelIconId;
+
+  /// True if the channel codec is unecrypted.
+  bool channelCodecIsUnecrypted;
+
+  /// Parent channel's id.
+  int cpid;
+
+  /// Channel's id.
+  int cid;
+
+  /// Codec latency
+  int codecLatency;
+
+  /// Security salt.
+  String channelSecuritySalt;
+
+  /// Channel delete delay.
+  int channelDeleteDelay;
+
+  /// Channel unique id.
+  String uid;
+
+  /// Banner GFX Url
+  String bannerGfxUrl;
+
+  /// Banner mode
+  int bannerMode;
+
+  /// Seconds empty
+  int secondsEmpty;
 }

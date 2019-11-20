@@ -126,7 +126,7 @@ class TeamSpeak3 {
   /// according keys, if it's an [Iterable] the command will have no keys,
   /// If another type is given [toString] will be called and the value will
   /// be appended to the command.
-  Future<Reply> write(String command, [dynamic values]) {
+  Future<Reply<Map<String, String>>> write(String command, [dynamic values]) {
     var data = StringBuffer(command.trim());
 
     if (values is Map) {
