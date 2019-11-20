@@ -8,8 +8,6 @@ import 'exceptions.dart';
 import 'reply.dart';
 import 'socket.dart';
 
-// TODO(Hexah): Add channel proprieties list. (const class).
-
 /// (TeamSpeak3) Channel wrapper.
 class Channel {
   /// Channel's ID.
@@ -24,9 +22,9 @@ class Channel {
   /// Creates a new channel.
   /// A name is required and the channel proprieties can be provided.
   static Future<Channel> create(TeamSpeak3 ts, String name,
-      {Map<String, dynamic> proprieties}) async {
-    var reply = await ts
-        .write('channelcreate', {'channel_name': name, ...?proprieties});
+      {ChannelProprieties proprieties}) async {
+    var reply = await ts.write(
+        'channelcreate', {'channel_name': name, ...?proprieties?.toMap()});
 
     var cReply = reply.parseNum();
     var channel = Channel(ts, cReply[0]['cid']);
@@ -58,7 +56,7 @@ class Channel {
       ..channelSemipermanent =
           convertedReply[0]['channel_flag_semipermanent'] == 1
       ..channelDefault = convertedReply[0]['channel_flag_default'] == 1
-      ..codecLatency = convertedReply[0]['channel_codec_latency_factory']
+      ..channelCodecLatency = convertedReply[0]['channel_codec_latency_factory']
       ..channelCodecIsUnecrypted =
           convertedReply[0]['channel_codec_is_unencrypted'] == 1
       ..channelSecuritySalt = convertedReply[0]['channel_security_salt']
@@ -130,7 +128,7 @@ class Channel {
   bool get hasPassword => _proprieties.channelHasPassword;
 
   /// Channel's codec latency.
-  int get codecLatency => _proprieties.codecLatency;
+  int get codecLatency => _proprieties.channelCodecLatency;
 
   /// True if the codec is unencrypted.
   bool get isCodecUnencrypted => _proprieties.channelCodecIsUnecrypted;
