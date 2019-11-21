@@ -41,7 +41,11 @@ class Channel {
     }
   }
 
-  /// Updates the client info with parsing 'channelinfo'.
+  /// Move the channel inside the parent.
+  Future<void> move(int cpid, [int order = 0]) =>
+      _ts.write('channelmove', {'cid': cid, 'cpid': cpid});
+
+  /// Updates the client info parsing 'channelinfo'.
   Future<void> updateInfo() async {
     var reply = await _ts.write('channelinfo', {'cid': cid});
 
