@@ -15,18 +15,18 @@ class Command {
   /// Constant for a server message.
   static const server = 3;
 
-  int _targetmode;
-  String _rawMsg;
-  int _invokerid;
-  String _invokername;
+  int _targetmode = -1;
+  String _rawMsg = '';
+  int? _invokerid;
+  String? _invokername;
 
   /// Targetmode that can be check using the valid values:
   /// [private], [channel] or [server].
   int get targetmode => _targetmode;
-  String _invokeruid;
+  String? _invokeruid;
 
-  String _command;
-  List<String> _params;
+  String? _command;
+  List<String>? _params;
 
   final _spaceReg = RegExp(r' +(?= )');
 
@@ -54,21 +54,21 @@ class Command {
       // ignore: lines_longer_than_80_chars
       'Command: $_command, Params: $_params, Invoker($_invokerid) $_invokername';
 
-  /// Raw, unparse message.
+  /// Raw, unparsed message.
   String get rawMsg => _rawMsg;
 
   /// The client's id who invoked the command.
-  int get invokerid => _invokerid;
+  int? get invokerid => _invokerid;
 
   /// The client's name of the invoker.
-  String get invokername => _invokername;
+  String? get invokername => _invokername;
 
   /// The client's uid of the invoker.
-  String get invokeruid => _invokeruid;
+  String? get invokeruid => _invokeruid;
 
   /// The command without any parameters.
-  String get command => _command;
+  String? get command => _command;
 
   /// The command parameters.
-  List<String> get params => _params;
+  List<String>? get params => _params;
 }

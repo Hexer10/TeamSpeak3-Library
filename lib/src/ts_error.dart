@@ -2,8 +2,8 @@ library teamspeak3.error;
 
 /// Error class to better parse all the socket responses.
 class TSError {
-  int _id;
-  String _message;
+  int _id = -1;
+  String _message = '';
 
   /// The error's [Map].
   final Map<String, dynamic> error;

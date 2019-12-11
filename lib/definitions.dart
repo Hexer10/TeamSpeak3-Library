@@ -213,78 +213,102 @@ class TokenType {
 /// Channel proprieties.
 class ChannelProprieties {
   /// Channel's name.
-  String channelName;
+  String? channelName;
 
   /// Channel's topic
-  String channelTopic;
+  String? channelTopic;
 
   /// Channel's description
-  String channelDescription;
+  String? channelDescription;
 
   /// Channel's (encrypted) password.
-  String channelPassword;
+  String? channelPassword;
 
   /// True if the channel has a password. (NOT Changeable)
-  bool channelHasPassword;
+  bool? channelHasPassword;
 
   /// Channel's codec. [Codec]
-  Codec channelCodec;
+  Codec? channelCodec;
 
   /// Channel's codec quality.
-  int channelCodecQuality;
+  int? channelCodecQuality;
 
   /// Channel's max clients.
-  int channelMaxClients;
+  int? channelMaxClients;
 
   /// Channel's max family clients.
-  int channelMaxFamilyClients;
+  int? channelMaxFamilyClients;
 
   /// Channel's order.
-  int channelOrder;
+  int? channelOrder;
 
   /// True if the channel is permanent.
-  bool channelPermanent;
+  bool? channelPermanent;
 
   /// True if the channel is semipermanent.
-  bool channelSemipermanent;
+  bool? channelSemipermanent;
 
   /// True if the channel is temporary.
-  bool channelTemporary;
+  bool? channelTemporary;
 
   /// True if the channel the default one.
-  bool channelDefault;
+  bool? channelDefault;
 
   /// True if the channel's max clients are unlimited.
-  bool channelMaxClientsUnlimited;
+  bool? channelMaxClientsUnlimited;
 
   /// True if the channel's max family clients are unlimited.
-  bool channelMaxFamilyClientsUnlimited;
+  bool? channelMaxFamilyClientsUnlimited;
 
   /// True if the channel's max family clients are inherited.
-  bool channelMaxFamilyClientsInherited;
+  bool? channelMaxFamilyClientsInherited;
 
   /// Channel needed talk power.
-  int channelNeededTalkPower;
+  int? channelNeededTalkPower;
 
   /// Channel's phonetic name.
-  String channelPhoneticName;
+  String? channelPhoneticName;
 
   /// Channel's filepath. (NOT Changeable)
-  String channelFilepath;
+  String? channelFilepath;
 
   /// True if the channel silence is forced. (NOT Changeable)
-  bool channelForceSilent;
+  bool? channelForceSilent;
 
   /// Channel's icon id.
-  int channelIconId;
+  int? channelIconId;
 
   /// True if the channel codec is unecrypted.
-  bool channelCodecIsUnecrypted;
+  bool? channelCodecIsUnecrypted;
 
   /// Parent channel's id.
-  int cpid;
+  int? cpid;
 
-  /// Channel proprities
+  /// Channel's id.
+  int? cid;
+
+  /// Codec latency
+  int? channelCodecLatency;
+
+  /// Security salt.
+  String? channelSecuritySalt;
+
+  /// Channel delete delay.
+  int? channelDeleteDelay;
+
+  /// Channel unique id.
+  String? uid;
+
+  /// Banner GFX Url
+  String? bannerGfxUrl;
+
+  /// Banner mode
+  int? bannerMode;
+
+  /// Seconds empty
+  int? secondsEmpty;
+
+  /// Channel proprieties
   ChannelProprieties(
       {this.channelName,
       this.channelTopic,
@@ -318,30 +342,6 @@ class ChannelProprieties {
       this.bannerGfxUrl,
       this.bannerMode,
       this.secondsEmpty});
-
-  /// Channel's id.
-  int cid;
-
-  /// Codec latency
-  int channelCodecLatency;
-
-  /// Security salt.
-  String channelSecuritySalt;
-
-  /// Channel delete delay.
-  int channelDeleteDelay;
-
-  /// Channel unique id.
-  String uid;
-
-  /// Banner GFX Url
-  String bannerGfxUrl;
-
-  /// Banner mode
-  int bannerMode;
-
-  /// Seconds empty
-  int secondsEmpty;
 
   /// Convert the channel proprieties to map.
   Map<String, dynamic> toMap() {
@@ -379,4 +379,100 @@ class ChannelProprieties {
     map.removeWhere((_, v) => v == null);
     return map;
   }
+}
+
+/// 'version' query command wrapper.
+class Version {
+  /// Server version
+  final String version;
+
+  /// Server's build number
+  final String build;
+
+  /// Server's platform
+  final String platform;
+
+  /// Construct for [Version]
+  const Version(this.version, this.build, this.platform);
+}
+
+/// TeamSpeak3 Server wrapper.
+class Server {
+  /// Uptime in seconds. (NOT Changeable)
+  int? serverUptime;
+
+  /// UTC timestamp.
+  int? serverTimestampUTC;
+
+  /// Virtual servers running count.
+  int? virtualServersRunning;
+
+  /// Bandwidth sent (file transfer) in Bytes/s. (NOT Changeable)
+  int? serverBandwidthSent;
+
+  /// Bandwidth received (file transfer) in Bytes/s. (NOT Changeable)
+  int? serverBandwidthReceived;
+
+  /// Total packet sent count. (NOT Changeable)
+  int? serverPacketsSentCount;
+
+  /// Total packet received  count. (NOT Changeable)
+  int? serverPacketsReceivedCount;
+
+  /// Average bandwidth sent the last second in Bytes/s. (NOT Changeable)
+  int? serverAvgBandwidthSentLastSecond;
+
+  /// Average bandwidth received the last second in Bytes/s. (NOT Changeable)
+  int? serverAvgBandwidthReceivedSecond;
+
+  /// Average bandwidth sent the last minute in Bytes/s. (NOT Changeable)
+  int? serverAvgBandwidthSentLastMinute;
+
+  /// Average bandwidth received the last minute in Bytes/s. (NOT Changeable)
+  int? serverAvgBandwidthReceivedLastMinute;
+
+  /// Database version. (NOT Changeable)
+  int? serverDatabaseVersion;
+
+  /// Default ServerQuery group id.
+  int? serverDefaultQueryGroup;
+
+  /// Default Template ServerQuery group id.
+  int? serverDefaultTemplateQueryGroup;
+
+  /// File transfer TCP port.
+  int? serverFileTransferPort;
+
+  /// Bandwidth available for outgoing file transfers in Bytes/s.
+  int? serverMaxDownloadBandwidth;
+
+  /// Bandwidth available for ingoing file transfers in Bytes/s.
+  int? serverMaxUploadBandwidth;
+
+  /// Default Server group id.
+  int? serverDefaultGroup;
+
+  /// Default Template Server group id.
+  int? serverDefaultServerTemplateGroup;
+
+  /// Default Channel group id.
+  int? serverChannelGroup;
+
+  /// Default Template Channel group id.
+  int? serverDefaultChannelTemplateGroup;
+
+  /// Total clients count in all virtual servers. (NOT Changeable)
+  int? serverTotalClientsCount;
+
+  /// Total channel count in all virtual servers. (NOT Changeable)
+  int? serverTotalChannelCount;
+
+  /// Max number of commands allowed in a certain time [serverMaxCommandsTime].
+  int? serverMaxCommandsCount;
+
+  /// Timeframe in seconds for commands.
+  int? serverMaxCommandsTime;
+
+  /// Flood ban time in seconds.
+  int? serverFloodBanTime;
 }

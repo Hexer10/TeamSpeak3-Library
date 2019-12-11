@@ -12,13 +12,11 @@ class Reply<T extends Map> extends ListBase<T> {
   TSError error;
 
   ///The error map and the ts3 server response are required.
-  Reply(Map<String, dynamic> error, this._data) {
-    this.error = TSError(error);
-  }
+  Reply(Map<String, dynamic> error, this._data) : error = TSError(error);
 
   /// Converts all the keys into a [num] where possible.
   Reply<Map<String, dynamic>> parseNum() {
-    List list = <Map<String, dynamic>>[];
+    final list = <Map<String, dynamic>>[];
     for (var i = 0; i < length; i++) {
       this[i].forEach((k, v) {
         if (list.length <= i) {

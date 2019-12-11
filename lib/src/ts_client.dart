@@ -14,18 +14,18 @@ class Client {
   final int clid;
   final TeamSpeak3 _ts;
 
-  int _cldbid;
-  int _cid;
-  int _cgid;
-  String _uniqueid;
-  String _nickname;
-  bool _talk;
-  bool _listen;
-  bool _away;
-  String _awayMessage;
-  String _country;
-  String _ip;
-  int _connectionTime;
+  int? _cldbid;
+  int? _cid;
+  int? _cgid;
+  String? _uniqueid;
+  String? _nickname;
+  bool _talk = false;
+  bool _listen = false;
+  bool _away = false;
+  String? _awayMessage;
+  String? _country;
+  String? _ip;
+  int? _connectionTime;
 
   /// Requires the [TeamSpeak3] instance and a valid client id.
   Client(this._ts, this.clid);
@@ -84,19 +84,19 @@ class Client {
           {'clid': clid, 'reasonid': reasonId, 'reasonmsg': reason});
 
   /// Client's Database ID.
-  int get cldbid => _cldbid;
+  int? get cldbid => _cldbid;
 
   /// Channel(where the client is ) ID.
-  int get cid => _cid;
+  int? get cid => _cid;
 
   /// Client's channel group.
-  int get cgid => _cgid;
+  int? get cgid => _cgid;
 
   /// Clients's unique ID.
-  String get uniqueid => _uniqueid;
+  String? get uniqueid => _uniqueid;
 
   /// Client's nickname.
-  String get nickname => _nickname;
+  String? get nickname => _nickname;
 
   /// True if the client can speak(can use the microphone and is not muted),
   /// false otherwise.
@@ -110,14 +110,14 @@ class Client {
   bool get away => _away;
 
   /// If away the away message, otherwise null.
-  String get awayMessage => _awayMessage;
+  String? get awayMessage => _awayMessage;
 
   /// Client's 2 Country code.
-  String get country => _country;
+  String? get country => _country;
 
   /// Client's IP.
-  String get ip => _ip;
+  String? get ip => _ip;
 
   /// Client's connection time.
-  int get connectionTime => _connectionTime;
+  int? get connectionTime => _connectionTime;
 }

@@ -17,12 +17,12 @@ class Channel {
   ChannelProprieties _proprieties;
 
   /// Requires the [TeamSpeak3] instance and a valid server id.
-  Channel(this._ts, this.cid);
+  Channel(this._ts, this.cid) : _proprieties = ChannelProprieties();
 
   /// Creates a new channel.
   /// A name is required and the channel proprieties can be provided.
   static Future<Channel> create(TeamSpeak3 ts, String name,
-      {ChannelProprieties proprieties}) async {
+      {ChannelProprieties? proprieties}) async {
     var reply = await ts.write(
         'channelcreate', {'channel_name': name, ...?proprieties?.toMap()});
 
@@ -102,97 +102,97 @@ class Channel {
       _ts.write('channeldelete', {'cid': cid, 'force': force ? 1 : 0});
 
   /// Channel's name.
-  String get name => _proprieties.channelName;
+  String? get name => _proprieties.channelName;
 
   /// Channel's topic.
-  String get topic => _proprieties.channelTopic;
+  String? get topic => _proprieties.channelTopic;
 
   /// Channel's description.
-  String get description => _proprieties.channelDescription;
+  String? get description => _proprieties.channelDescription;
 
   /// Channel's (encrypted) password.
-  String get password => _proprieties.channelPassword;
+  String? get password => _proprieties.channelPassword;
 
   /// Channel's codec.
-  Codec get codec => _proprieties.channelCodec;
+  Codec? get codec => _proprieties.channelCodec;
 
   /// Channel's codec quality.
-  int get codecQuality => _proprieties.channelCodecQuality;
+  int? get codecQuality => _proprieties.channelCodecQuality;
 
   /// Channel's max clients.
-  int get maxClients => _proprieties.channelMaxClients;
+  int? get maxClients => _proprieties.channelMaxClients;
 
   /// Channel's max family clients.
-  int get maxFamilyClients => _proprieties.channelMaxFamilyClients;
+  int? get maxFamilyClients => _proprieties.channelMaxFamilyClients;
 
   /// Channel's order.
-  int get order => _proprieties.channelOrder;
+  int? get order => _proprieties.channelOrder;
 
   /// True if the channel is permanent.
-  bool get permanent => _proprieties.channelPermanent;
+  bool? get permanent => _proprieties.channelPermanent;
 
   /// True if the channel is semipermanent.
-  bool get semiPermanent => _proprieties.channelSemipermanent;
+  bool? get semiPermanent => _proprieties.channelSemipermanent;
 
   /// True if the channel is the default channel.
-  bool get defaultChannel => _proprieties.channelDefault;
+  bool? get defaultChannel => _proprieties.channelDefault;
 
   /// True if the channel has a password.
-  bool get hasPassword => _proprieties.channelHasPassword;
+  bool? get hasPassword => _proprieties.channelHasPassword;
 
   /// Channel's codec latency.
-  int get codecLatency => _proprieties.channelCodecLatency;
+  int? get codecLatency => _proprieties.channelCodecLatency;
 
   /// True if the codec is unencrypted.
-  bool get isCodecUnencrypted => _proprieties.channelCodecIsUnecrypted;
+  bool? get isCodecUnencrypted => _proprieties.channelCodecIsUnecrypted;
 
   /// Channel's security salt.
-  String get securitySalt => _proprieties.channelSecuritySalt;
+  String? get securitySalt => _proprieties.channelSecuritySalt;
 
   /// Channel's delete delay.
-  int get deleteDelay => _proprieties.channelDeleteDelay;
+  int? get deleteDelay => _proprieties.channelDeleteDelay;
 
   /// Channel's unique id.
-  String get uid => _proprieties.uid;
+  String? get uid => _proprieties.uid;
 
   /// True if the max clients are unlimited.
-  bool get maxClientsUnlimited => _proprieties.channelMaxClientsUnlimited;
+  bool? get maxClientsUnlimited => _proprieties.channelMaxClientsUnlimited;
 
   /// True if the max family clients are unlimited.
-  bool get maxFamilyClientsUnlimited =>
+  bool? get maxFamilyClientsUnlimited =>
       _proprieties.channelMaxFamilyClientsUnlimited;
 
   /// True if the max family clients are inherited.
-  bool get maxFamilyClientsInherited =>
+  bool? get maxFamilyClientsInherited =>
       _proprieties.channelMaxFamilyClientsInherited;
 
   /// Channel's filepath.
-  String get filepath => _proprieties.channelFilepath;
+  String? get filepath => _proprieties.channelFilepath;
 
   /// Channel's needed talk power.
-  int get neededTalkPower => _proprieties.channelNeededTalkPower;
+  int? get neededTalkPower => _proprieties.channelNeededTalkPower;
 
   /// True if the silence is forced.
-  bool get forcedSilence => _proprieties.channelForceSilent;
+  bool? get forcedSilence => _proprieties.channelForceSilent;
 
   /// Channel's phonetic name.
-  String get phoneticName => _proprieties.channelPhoneticName;
+  String? get phoneticName => _proprieties.channelPhoneticName;
 
   /// Channel's icon id.
-  int get iconId => _proprieties.channelIconId;
+  int? get iconId => _proprieties.channelIconId;
 
   /// Channel's banner GFX Url.
-  String get bannerGfxUrl => _proprieties.bannerGfxUrl;
+  String? get bannerGfxUrl => _proprieties.bannerGfxUrl;
 
   /// Channel's banner mode.
-  int get bannerMode => _proprieties.bannerMode;
+  int? get bannerMode => _proprieties.bannerMode;
 
   /// Channel's seconds since it is empty.
-  int get secondsEmpty => _proprieties.secondsEmpty;
+  int? get secondsEmpty => _proprieties.secondsEmpty;
 
   /// True if the channel is temporary.
-  bool get temporary => _proprieties.channelTemporary;
+  bool? get temporary => _proprieties.channelTemporary;
 
   /// Channel parent's id.
-  int get cpid => _proprieties.cpid;
+  int? get cpid => _proprieties.cpid;
 }

@@ -5,6 +5,8 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:teamspeak3/definitions.dart';
+
 import 'bot.dart';
 import 'command.dart';
 import 'exceptions.dart';
@@ -30,10 +32,10 @@ class TeamSpeak3 {
   final int server;
 
   /// Bot(client) instance.
-  Bot bot;
+  RawBot bot = RawBot();
 
-  Socket _socket;
-  Timer _timer;
+  Socket? _socket;
+  Timer? _timer;
 
   int _count = 0;
 
@@ -41,11 +43,11 @@ class TeamSpeak3 {
   final Queue<Completer<Reply<Map<String, String>>>> _replyQueue = Queue();
   final Map<int, StreamController<Reply>> _channelSubsMap = {};
 
-  StreamController<Command> _onServerCommand;
-  StreamController<Command> _onChannelCommand;
-  StreamController<Command> _onPrivateCommand;
-  StreamController<Reply> _onServerEvent;
-  StreamController<Reply> _onChannelEvent;
+  final _onServerCommand = StreamController<Command>.broadcast();
+  final _onChannelCommand = StreamController<Command>.broadcast();
+  final _onPrivateCommand = StreamController<Command>.broadcast();
+  final _onServerEvent = StreamController<Reply>.broadcast();
+  final _onChannelEvent = StreamController<Reply>.broadcast();
 
   /// Every time a server message is sent a [Command] will be added
   /// to this server.
@@ -72,25 +74,20 @@ class TeamSpeak3 {
       {this.server = 1}) {
     bot = Bot(this);
 
-    _onServerCommand = StreamController<Command>.broadcast(
-        onListen: () => write('servernotifyregister', {'event': 'textserver'}));
+    _onServerCommand.onListen =
+        () => write('servernotifyregister', {'event': 'textserver'});
 
-    _onChannelCommand = StreamController<Command>.broadcast(
-        // ignore: lines_longer_than_80_chars
-        onListen: () =>
-            write('servernotifyregister', {'event': 'textchannel'}));
+    _onChannelCommand.onListen =
+        () => write('servernotifyregister', {'event': 'textchannel'});
 
-    _onPrivateCommand = StreamController<Command>.broadcast(
-        // ignore: lines_longer_than_80_chars
-        onListen: () =>
-            write('servernotifyregister', {'event': 'textprivate'}));
+    _onPrivateCommand.onListen =
+        () => write('servernotifyregister', {'event': 'textprivate'});
 
-    _onServerEvent = StreamController<Reply>.broadcast(
-        onListen: () => write('servernotifyregister', {'event': 'server'}));
+    _onServerEvent.onListen =
+        () => write('servernotifyregister', {'event': 'server'});
 
-    _onChannelEvent = StreamController<Reply>.broadcast(
-        onListen: () =>
-            write('servernotifyregister', {'event': 'channel', 'id': 0}));
+    _onChannelEvent.onListen =
+        () => write('servernotifyregister', {'event': 'channel', 'id': 0});
   }
 
   /// Connects to the remote server, authenticates to it, and selects the chosen
@@ -128,7 +125,6 @@ class TeamSpeak3 {
   /// be appended to the command.
   Future<Reply<Map<String, String>>> write(String command, [dynamic values]) {
     var data = StringBuffer(command.trim());
-
     if (values is Map) {
       values.forEach((k, v) {
         if (v == null) {
@@ -181,6 +177,13 @@ class TeamSpeak3 {
     var channel = Channel(this, cid);
     await channel.updateInfo();
     return channel;
+  }
+
+  /// Returns the server's [Version].
+  Future<Version> getVersion() async {
+    var version = await write('version');
+    return Version(version.first['version'], version.first['build'],
+        version.first['platform']);
   }
 
   void _onData(info) {
@@ -262,7 +265,7 @@ class TeamSpeak3 {
         _onChannelEvent.add(reply);
       }
 
-      _channelSubsMap[int.parse(reply[0]['cid'])]?.add(reply);
+      _channelSubsMap[int.parse(reply[0]['cid'])].add(reply);
       return;
     } else if (decoded.startsWith('notifychannelcreated')) {
       _onChannelEvent.add(reply);
@@ -277,7 +280,7 @@ class TeamSpeak3 {
       }
 
       // Poorly implemented.
-      _channelSubsMap[int.parse(reply[0]['cfid'])]?.add(reply);
+      _channelSubsMap[int.parse(reply[0]['cfid'])].add(reply);
       return;
     } else if (decoded.startsWith('notifyclientleftview') ||
         decoded.startsWith('notifyclientmoved')) {
@@ -290,7 +293,7 @@ class TeamSpeak3 {
       }
 
       // Poorly implemented.
-      _channelSubsMap[int.parse(reply[0]['ctid'])]?.add(reply);
+      _channelSubsMap[int.parse(reply[0]['ctid'])].add(reply);
       return;
     }
 
@@ -299,6 +302,7 @@ class TeamSpeak3 {
   }
 
   void _processQueue() {
+    assert(_socket != null);
     // Assure that only one command is send at the same time,
     // wait for a response before sending the next one.
     if (_queue.length != _replyQueue.length) {
@@ -307,7 +311,7 @@ class TeamSpeak3 {
 
     if (_queue.isNotEmpty) {
       var data = _queue.removeFirst();
-      _socket.write(data);
+      _socket?.write(data);
 //      print('Written $data');
     }
   }
@@ -329,8 +333,8 @@ class TeamSpeak3 {
       .replaceAll('\v', r'\v');
 
   /// Decodes a string according to the TeamSpeak3 documentation.
-  /// If the string is null, null will be returned.
-  String decode(String string) {
+  /// If the string is `null`, null will be returned.
+  String? decode(String string) {
     if (string == 'null') {
       return null;
     }
