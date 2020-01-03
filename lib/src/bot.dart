@@ -5,12 +5,8 @@ import 'dart:async';
 import 'reply.dart';
 import 'socket.dart';
 
-class RawBot {
-  Future<Reply> setNickname(String name) {}
-}
-
-///
-class Bot extends RawBot {
+/// Bot Query Client
+class Bot {
   /// [TeamSpeak3] instance.
   final TeamSpeak3? ts;
 
@@ -18,7 +14,6 @@ class Bot extends RawBot {
   Bot(this.ts);
 
   /// Sets the bot nickname.
-  @override
   Future<Reply> setNickname(String name) async =>
-      ts?.write('clientupdate', {'client_nickname': name});
+      ts!.write('clientupdate', {'client_nickname': name});
 }

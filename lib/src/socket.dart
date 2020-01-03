@@ -31,8 +31,10 @@ class TeamSpeak3 {
   /// The remove server id.
   final int server;
 
+  Bot? _bot;
+
   /// Bot(client) instance.
-  RawBot bot = RawBot();
+  Bot get bot => _bot!;
 
   Socket? _socket;
   Timer? _timer;
@@ -72,7 +74,7 @@ class TeamSpeak3 {
   /// You can specify a [server] that will be used in the authentication phase.
   TeamSpeak3(this.host, this.port, this.username, this.password,
       {this.server = 1}) {
-    bot = Bot(this);
+    _bot = Bot(this);
 
     _onServerCommand.onListen =
         () => write('servernotifyregister', {'event': 'textserver'});
@@ -311,7 +313,7 @@ class TeamSpeak3 {
 
     if (_queue.isNotEmpty) {
       var data = _queue.removeFirst();
-      _socket?.write(data);
+      _socket!.write(data);
 //      print('Written $data');
     }
   }
